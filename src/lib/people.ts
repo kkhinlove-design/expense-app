@@ -22,6 +22,13 @@ export const PEOPLE: Person[] = [
     budget: 8_000_000,
   },
   {
+    slug: "jo",
+    name: "조윤정",
+    title: "국장",
+    storageKey: "expense-data-jo",
+    budget: 6_000_000,
+  },
+  {
     slug: "etc",
     name: "기타운영비",
     title: "",
