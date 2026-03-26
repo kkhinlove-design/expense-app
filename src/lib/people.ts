@@ -19,20 +19,20 @@ export const PEOPLE: Person[] = [
     pin: "2800",
   },
   {
-    slug: "ko",
-    name: "고경환",
-    title: "실장",
-    storageKey: "expense-data-ko",
-    budget: 5_000_000,
-    pin: "5798",
-  },
-  {
     slug: "jo",
     name: "조윤정",
     title: "국장",
     storageKey: "expense-data-jo",
     budget: 6_000_000,
     pin: "2800",
+  },
+  {
+    slug: "ko",
+    name: "고경환",
+    title: "실장",
+    storageKey: "expense-data-ko",
+    budget: 5_000_000,
+    pin: "5798",
   },
   {
     slug: "etc",
