@@ -23,7 +23,7 @@ export const PEOPLE: Person[] = [
     name: "고경환",
     title: "실장",
     storageKey: "expense-data-ko",
-    budget: 8_000_000,
+    budget: 5_000_000,
     pin: "5798",
   },
   {
