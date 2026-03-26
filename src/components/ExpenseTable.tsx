@@ -146,7 +146,7 @@ export default function ExpenseTable({ expenses, onEdit, onDelete }: Props) {
             >
               소계
             </td>
-            <td className="py-4 px-3 text-right font-extrabold text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <td className="py-4 px-3 text-right font-extrabold text-sm bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
               {expenses.reduce((s, e) => s + e.amount, 0).toLocaleString()}원
             </td>
             <td />
