@@ -27,7 +27,6 @@ export default function PersonPage() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Expense | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [unlocked, setUnlocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const currentYear = new Date().getFullYear();
 
@@ -48,17 +47,10 @@ export default function PersonPage() {
       router.replace("/");
       return;
     }
-    if (sessionStorage.getItem(`pin-${person.slug}`) === "1") {
-      setUnlocked(true);
-    }
     fetchExpenses();
   }, [person, router, fetchExpenses]);
 
   if (!person) return null;
-
-  if (!unlocked) {
-    return <PinLock person={person} onUnlock={() => setUnlocked(true)} />;
-  }
 
   if (loading) {
     return (
