@@ -54,8 +54,11 @@ export default function PersonPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-gray-400">
-        불러오는 중...
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center gap-3 text-gray-400">
+          <div className="w-5 h-5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+          불러오는 중...
+        </div>
       </div>
     );
   }
@@ -129,43 +132,52 @@ export default function PersonPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* 헤더 */}
-      <div className="mb-8">
+      {/* Header */}
+      <div className="mb-8 animate-fade-in-up">
         <button
           onClick={() => router.push("/")}
-          className="text-sm text-gray-500 hover:text-gray-700 mb-3 flex items-center gap-1"
+          className="group text-sm text-gray-500 hover:text-indigo-600 mb-4 flex items-center gap-1.5 transition-colors"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <div className="w-7 h-7 rounded-full bg-white/80 group-hover:bg-indigo-100 shadow-sm flex items-center justify-center transition-all">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </div>
           목록으로
         </button>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {person.name}{person.title ? ` ${person.title}` : ""} 업무추진비
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          카드 사용내역 관리 및 서식 자동 생성
-        </p>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 flex items-center justify-center">
+            <span className="text-white text-lg font-bold">{person.name.charAt(0)}</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              {person.name}{person.title ? ` ${person.title}` : ""} 업무추진비
+            </h1>
+            <p className="text-sm text-gray-500 mt-0.5">
+              카드 사용내역 관리 및 서식 자동 생성
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* 예산 현황 */}
-      <div className="mb-6">
+      {/* Budget Bar */}
+      <div className="mb-6 animate-fade-in-up-delay-1">
         <BudgetBar expenses={yearExpenses} budget={person.budget} />
       </div>
 
-      {/* 월 선택 */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-1 overflow-x-auto pb-1">
+      {/* Month Selector */}
+      <div className="flex items-center justify-between mb-5 animate-fade-in-up-delay-2">
+        <div className="flex gap-1.5 overflow-x-auto pb-1">
           {MONTHS.map((label, i) => {
             const count = expenses.filter((e) => {
               const [y, m] = e.date.split("-");
@@ -175,17 +187,17 @@ export default function PersonPage() {
               <button
                 key={i}
                 onClick={() => setSelectedMonth(i)}
-                className={`px-3 py-1.5 text-sm rounded-lg whitespace-nowrap transition-colors ${
+                className={`px-3 py-2 text-sm rounded-xl whitespace-nowrap transition-all duration-200 font-medium ${
                   selectedMonth === i
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                    ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25 scale-105"
+                    : "glass-card text-gray-600 hover:bg-white/90 hover:shadow-md"
                 }`}
               >
                 {label}
                 {count > 0 && (
                   <span
                     className={`ml-1 text-xs ${
-                      selectedMonth === i ? "text-blue-200" : "text-gray-400"
+                      selectedMonth === i ? "text-indigo-200" : "text-gray-400"
                     }`}
                   >
                     {count}
@@ -197,20 +209,21 @@ export default function PersonPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-2 mb-5 animate-fade-in-up-delay-2">
         <button
           onClick={() => {
             setShowForm(!showForm);
             setEditing(null);
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"
+          className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5 text-sm font-semibold transition-all duration-200"
         >
           + 내역 추가
         </button>
         {filteredExpenses.length > 0 && (
           <button
             onClick={handleBulkDownload}
-            className="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 text-sm font-medium transition-colors"
+            className="glass-card text-indigo-600 px-5 py-2.5 rounded-xl hover:shadow-lg hover:-translate-y-0.5 text-sm font-semibold transition-all duration-200 border-indigo-200"
           >
             한글 다운로드 ({filteredExpenses.length}건)
           </button>
@@ -220,11 +233,11 @@ export default function PersonPage() {
             const label = person.name + (person.title ? `_${person.title}` : "");
             downloadTemplate(`${label}_양식.xlsx`);
           }}
-          className="border border-green-600 text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 text-sm font-medium transition-colors"
+          className="glass-card text-emerald-600 px-5 py-2.5 rounded-xl hover:shadow-lg hover:-translate-y-0.5 text-sm font-semibold transition-all duration-200 border-emerald-200"
         >
           엑셀 양식 다운로드
         </button>
-        <label className="border border-orange-500 text-orange-500 px-4 py-2 rounded-lg hover:bg-orange-50 text-sm font-medium transition-colors cursor-pointer">
+        <label className="glass-card text-orange-600 px-5 py-2.5 rounded-xl hover:shadow-lg hover:-translate-y-0.5 text-sm font-semibold transition-all duration-200 cursor-pointer border-orange-200">
           엑셀 업로드
           <input
             type="file"
@@ -235,10 +248,10 @@ export default function PersonPage() {
         </label>
       </div>
 
-      {/* 입력 폼 */}
+      {/* Form */}
       {(showForm || editing) && (
-        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
-          <h2 className="text-lg font-semibold mb-4">
+        <div className="glass-card rounded-2xl p-6 shadow-xl mb-6 animate-fade-in-up">
+          <h2 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-5">
             {editing ? "내역 수정" : "새 내역 등록"}
           </h2>
           <ExpenseForm
@@ -252,8 +265,8 @@ export default function PersonPage() {
         </div>
       )}
 
-      {/* 테이블 */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      {/* Table */}
+      <div className="glass-card rounded-2xl shadow-xl p-5 animate-fade-in-up-delay-3">
         <ExpenseTable
           expenses={filteredExpenses}
           onEdit={(e) => {

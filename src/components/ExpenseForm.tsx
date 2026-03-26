@@ -40,8 +40,8 @@ export default function ExpenseForm({ onSubmit, onCancel, initial }: Props) {
   };
 
   const inputClass =
-    "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent";
-  const labelClass = "block text-sm font-medium text-gray-700 mb-1";
+    "w-full px-4 py-2.5 bg-white/60 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition-all duration-200 placeholder:text-gray-300";
+  const labelClass = "block text-sm font-semibold text-gray-600 mb-1.5";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -111,10 +111,10 @@ export default function ExpenseForm({ onSubmit, onCancel, initial }: Props) {
           className={inputClass}
         />
       </div>
-      <div className="flex gap-2 pt-2">
+      <div className="flex gap-2 pt-3">
         <button
           type="submit"
-          className="flex-1 bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 font-medium transition-colors"
+          className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5 font-semibold transition-all duration-200"
         >
           {initial ? "수정" : "등록"}
         </button>
@@ -122,7 +122,7 @@ export default function ExpenseForm({ onSubmit, onCancel, initial }: Props) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-6 py-3 glass-card rounded-xl hover:bg-white/90 hover:shadow-md font-medium transition-all duration-200"
           >
             취소
           </button>
