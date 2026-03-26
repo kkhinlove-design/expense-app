@@ -59,7 +59,7 @@ function makeCell(
   const charRef = opts?.charRef ?? 7;
   const align = opts?.align ?? "LEFT";
 
-  const paraPrIDRef = align === "RIGHT" ? "2" : align === "CENTER" ? "3" : "0";
+  const paraPrIDRef = align === "RIGHT" ? "21" : align === "CENTER" ? "0" : "6";
 
   return `<hp:tc name="" header="0" hasMargin="0" protect="0" editable="0" dirty="0" borderFillIDRef="${fillRef}"><hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="CENTER" linkListIDRef="0" linkListNextIDRef="0" textWidth="0" textHeight="0" hasTextRef="0" hasNumRef="0"><hp:p id="0" paraPrIDRef="${paraPrIDRef}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0"><hp:run charPrIDRef="${charRef}"><hp:t>${escapeXml(text)}</hp:t></hp:run><hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="1200" textheight="1200" baseline="1020" spacing="720" horzpos="0" horzsize="${width - 1020}" flags="393216"/></hp:linesegarray></hp:p></hp:subList><hp:cellAddr colAddr="${colAddr}" rowAddr="${rowAddr}"/><hp:cellSpan colSpan="${colSpan}" rowSpan="${rowSpan}"/><hp:cellSz width="${width}" height="${height}"/><hp:cellMargin left="340" right="340" top="113" bottom="113"/></hp:tc>`;
 }
