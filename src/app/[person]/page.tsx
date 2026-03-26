@@ -16,6 +16,7 @@ import { saveExpenses } from "@/lib/storage";
 import BudgetBar from "@/components/BudgetBar";
 import ExpenseForm from "@/components/ExpenseForm";
 import ExpenseTable from "@/components/ExpenseTable";
+import PinLock from "@/components/PinLock";
 
 export default function PersonPage() {
   const params = useParams();
@@ -26,6 +27,7 @@ export default function PersonPage() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Expense | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [unlocked, setUnlocked] = useState(false);
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -33,10 +35,17 @@ export default function PersonPage() {
       router.replace("/");
       return;
     }
+    if (sessionStorage.getItem(`pin-${person.slug}`) === "1") {
+      setUnlocked(true);
+    }
     setExpenses(loadExpenses(person.storageKey));
   }, [person, router]);
 
   if (!person) return null;
+
+  if (!unlocked) {
+    return <PinLock person={person} onUnlock={() => setUnlocked(true)} />;
+  }
 
   const filteredExpenses = expenses
     .filter((e) => {
