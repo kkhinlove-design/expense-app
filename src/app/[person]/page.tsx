@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Expense, MONTHS } from "@/lib/types";
 import {
@@ -8,11 +8,11 @@ import {
   addExpense,
   updateExpense,
   deleteExpense,
+  addExpensesBulk,
 } from "@/lib/storage";
 import { generateMultipleHwpx } from "@/lib/hwpx";
 import { downloadTemplate, parseExcel } from "@/lib/excel";
 import { getPerson } from "@/lib/people";
-import { saveExpenses } from "@/lib/storage";
 import BudgetBar from "@/components/BudgetBar";
 import ExpenseForm from "@/components/ExpenseForm";
 import ExpenseTable from "@/components/ExpenseTable";
@@ -28,7 +28,20 @@ export default function PersonPage() {
   const [editing, setEditing] = useState<Expense | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [unlocked, setUnlocked] = useState(false);
+  const [loading, setLoading] = useState(true);
   const currentYear = new Date().getFullYear();
+
+  const fetchExpenses = useCallback(async () => {
+    if (!person) return;
+    try {
+      const data = await loadExpenses(person.slug);
+      setExpenses(data);
+    } catch (err) {
+      console.error("데이터 로드 실패:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [person]);
 
   useEffect(() => {
     if (!person) {
@@ -38,13 +51,21 @@ export default function PersonPage() {
     if (sessionStorage.getItem(`pin-${person.slug}`) === "1") {
       setUnlocked(true);
     }
-    setExpenses(loadExpenses(person.storageKey));
-  }, [person, router]);
+    fetchExpenses();
+  }, [person, router, fetchExpenses]);
 
   if (!person) return null;
 
   if (!unlocked) {
     return <PinLock person={person} onUnlock={() => setUnlocked(true)} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-400">
+        불러오는 중...
+      </div>
+    );
   }
 
   const filteredExpenses = expenses
@@ -58,18 +79,33 @@ export default function PersonPage() {
     e.date.startsWith(String(currentYear))
   );
 
-  const handleAdd = (expense: Expense) => {
-    setExpenses(addExpense(expense, person.storageKey));
-    setShowForm(false);
+  const handleAdd = async (expense: Expense) => {
+    try {
+      await addExpense(expense, person.slug);
+      await fetchExpenses();
+      setShowForm(false);
+    } catch (err) {
+      alert("등록 실패: " + (err as Error).message);
+    }
   };
 
-  const handleUpdate = (expense: Expense) => {
-    setExpenses(updateExpense(expense.id, expense, person.storageKey));
-    setEditing(null);
+  const handleUpdate = async (expense: Expense) => {
+    try {
+      await updateExpense(expense.id, expense);
+      await fetchExpenses();
+      setEditing(null);
+    } catch (err) {
+      alert("수정 실패: " + (err as Error).message);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setExpenses(deleteExpense(id, person.storageKey));
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteExpense(id);
+      await fetchExpenses();
+    } catch (err) {
+      alert("삭제 실패: " + (err as Error).message);
+    }
   };
 
   const handleBulkDownload = async () => {
@@ -90,9 +126,8 @@ export default function PersonPage() {
         alert("가져올 데이터가 없습니다");
         return;
       }
-      const merged = [...expenses, ...parsed];
-      saveExpenses(merged, person.storageKey);
-      setExpenses(merged);
+      await addExpensesBulk(parsed, person.slug);
+      await fetchExpenses();
       alert(`${parsed.length}건이 추가되었습니다`);
     } catch (err) {
       alert((err as Error).message);
